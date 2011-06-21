@@ -1,0 +1,396 @@
+<?xml version="1.0"?>
+<objects>
+
+  <!-- ('', 'zport', 'dmd', 'Devices', 'RabbitMQMonitor') >
+       <object id='/zport/dmd/Devices/RabbitMQMonitor' module='Products.ZenModel.DeviceClass' class='DeviceClass'>
+       <property type="string" id="description" mode="w" >
+       Put devices in this class to monitor their RabbitMQ queues.
+       </property>
+       <property visible="True" type="lines" id="zDeviceTemplates" >
+       ['Device', 'RabbitMQMonitor']
+       </property>
+       <property visible="True" type="boolean" id="zSnmpMonitorIgnore" >
+       True
+       </property>
+       </object-->
+
+  <!-- ('', 'zport', 'dmd', 'Devices', 'rrdTemplates', 'RabbitMQMonitor') -->
+  <object id='/zport/dmd/Devices/rrdTemplates/RabbitMQMonitor' module='Products.ZenModel.RRDTemplate' class='RRDTemplate'>
+
+    <property type="string" id="targetPythonClass" mode="w" >
+      Products.ZenModel.Device
+    </property>
+
+    <tomanycont id='datasources'>
+
+      <object id='queues' module='ZenPacks.community.RabbitMQ.datasources.RabbitMQDataSource' class='RabbitMQDataSource'>
+	<property select_variable="sourcetypes" type="selection" id="sourcetype" mode="w" >
+          RabbitMQMonitor
+	</property>
+	<property type="boolean" id="enabled" mode="w" >
+          True
+	</property>
+	<property type="string" id="eventClass" mode="w" >
+          /Unknown
+	</property>
+	<property type="int" id="severity" mode="w" >
+          3
+	</property>
+	<property type="int" id="cycletime" mode="w" >
+          10
+	</property>
+	<property type="string" id="ipAddress" mode="w" >
+          ${dev/manageIp}
+	</property>
+	<property type="int" id="port" mode="w" >
+          55672
+	</property>
+	<property type="string" id="api_path" mode="w" >
+          queues
+	</property>
+	<tomanycont id='datapoints'></tomanycont>
+      </object>
+
+      <object id='overview' module='ZenPacks.community.RabbitMQ.datasources.RabbitMQDataSource' class='RabbitMQDataSource'>
+        <property select_variable="sourcetypes" type="selection" id="sourcetype" mode="w" >
+          RabbitMQMonitor
+        </property>
+        <property type="boolean" id="enabled" mode="w" >
+          True
+        </property>
+        <property type="string" id="eventClass" mode="w" >
+          /Unknown
+        </property>
+        <property type="int" id="severity" mode="w" >
+          3
+        </property>
+        <property type="int" id="cycletime" mode="w" >
+          5
+        </property>
+        <property type="string" id="ipAddress" mode="w" >
+          ${dev/manageIp}
+        </property>
+        <property type="int" id="port" mode="w" >
+          55672
+        </property>
+        <property type="string" id="api_path" mode="w" >
+          overview
+        </property>
+
+        <tomanycont id='datapoints'>
+
+          <object id='messages' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
+            <property type="text" id="zendoc" mode="w" >
+              The number of messages.
+            </property>
+            <property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
+              GAUGE
+            </property>
+            <property type="boolean" id="isrow" mode="w" >
+              True
+            </property>
+          </object>
+
+          <object id='messages_ready' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
+            <property type="text" id="zendoc" mode="w" >
+              The number of ready messages.
+            </property>
+            <property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
+              GAUGE
+            </property>
+            <property type="boolean" id="isrow" mode="w" >
+              True
+            </property>
+          </object>
+
+          <object id='messages_unacknowledged' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
+            <property type="text" id="zendoc" mode="w" >
+              The number of unacked messages.
+            </property>
+            <property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
+              GAUGE
+            </property>
+            <property type="boolean" id="isrow" mode="w" >
+              True
+            </property>
+          </object>
+
+          <object id='rate_publish' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
+            <property type="text" id="zendoc" mode="w" >
+              The number of messages published per second.
+            </property>
+            <property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
+              GAUGE
+            </property>
+            <property type="boolean" id="isrow" mode="w" >
+              True
+            </property>
+          </object>
+
+          <object id='rate_deliver' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
+            <property type="text" id="zendoc" mode="w" >
+              The number of messages delivered per second.
+            </property>
+            <property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
+              GAUGE
+            </property>
+            <property type="boolean" id="isrow" mode="w" >
+              True
+            </property>
+          </object>
+
+          <object id='rate_ack' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
+            <property type="text" id="zendoc" mode="w" >
+              The number of messages acked per second.
+            </property>
+            <property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
+              GAUGE
+            </property>
+            <property type="boolean" id="isrow" mode="w" >
+              True
+            </property>
+          </object>
+        </tomanycont>
+
+      </object>
+    </tomanycont>
+
+    <tomanycont id='graphDefs'>
+
+      <object id='Rabbit Messages' module='Products.ZenModel.GraphDefinition' class='GraphDefinition'>
+        <property type="int" id="height" mode="w" >
+          200
+        </property>
+        <property type="int" id="width" mode="w" >
+          500
+        </property>
+        <property type="string" id="units" mode="w" >
+    messages
+    </property>
+
+        <property type="boolean" id="log" mode="w" >
+          False
+        </property>
+        <property type="boolean" id="base" mode="w" >
+          False
+        </property>
+        <property type="int" id="miny" mode="w" >
+          0
+        </property>
+        <property type="int" id="maxy" mode="w" >
+          -1
+        </property>
+        <property type="boolean" id="hasSummary" mode="w" >
+          True
+        </property>
+        <property type="long" id="sequence" mode="w" >
+          1
+        </property>
+
+        <tomanycont id='graphPoints'>
+
+          <object id='Total' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+            <property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
+              LINE
+            </property>
+            <property type="long" id="lineWidth" mode="w" >
+              1
+            </property>
+            <property type="boolean" id="stacked" mode="w" >
+              False
+            </property>
+            <property type="string" id="format" mode="w" >
+              %5.2lf%s
+            </property>
+            <property type="string" id="legend" mode="w" >
+              ${graphPoint/id}
+            </property>
+            <property type="long" id="limit" mode="w" >
+              -1
+            </property>
+            <property type="string" id="dpName" mode="w" >
+              overview_messages
+            </property>
+            <property type="string" id="cFunc" mode="w" >
+              AVERAGE
+            </property>
+          </object>
+
+          <object id='Ready' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+            <property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
+              LINE
+            </property>
+            <property type="long" id="lineWidth" mode="w" >
+              1
+            </property>
+            <property type="boolean" id="stacked" mode="w" >
+              False
+            </property>
+            <property type="string" id="format" mode="w" >
+              %5.2lf%s
+            </property>
+            <property type="string" id="legend" mode="w" >
+              ${graphPoint/id}
+            </property>
+            <property type="long" id="limit" mode="w" >
+              -1
+            </property>
+            <property type="string" id="dpName" mode="w" >
+              overview_messages_ready
+            </property>
+            <property type="string" id="cFunc" mode="w" >
+              AVERAGE
+            </property>
+          </object>
+
+          <object id='Unacknowledged' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+            <property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
+              LINE
+            </property>
+            <property type="long" id="lineWidth" mode="w" >
+              1
+            </property>
+            <property type="boolean" id="stacked" mode="w" >
+              False
+            </property>
+            <property type="string" id="format" mode="w" >
+              %5.2lf%s
+            </property>
+            <property type="string" id="legend" mode="w" >
+              ${graphPoint/id}
+            </property>
+            <property type="long" id="limit" mode="w" >
+              -1
+            </property>
+            <property type="string" id="dpName" mode="w" >
+              overview_messages_unacknowledged
+            </property>
+            <property type="string" id="cFunc" mode="w" >
+              AVERAGE
+            </property>
+          </object>
+
+        </tomanycont>
+      </object>
+
+        <object id='Rabbit Message Rates' module='Products.ZenModel.GraphDefinition' class='GraphDefinition'>
+        <property type="int" id="height" mode="w" >
+          200
+        </property>
+        <property type="int" id="width" mode="w" >
+          500
+        </property>
+        <property type="string" id="units" mode="w" >
+    messages/sec
+    </property>
+        <property type="boolean" id="log" mode="w" >
+          False
+        </property>
+        <property type="boolean" id="base" mode="w" >
+          False
+        </property>
+        <property type="int" id="miny" mode="w" >
+          0
+        </property>
+        <property type="int" id="maxy" mode="w" >
+          -1
+        </property>
+        <property type="boolean" id="hasSummary" mode="w" >
+          True
+        </property>
+        <property type="long" id="sequence" mode="w" >
+          1
+        </property>
+
+        <tomanycont id='graphPoints'>
+
+          <object id='Publish' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+            <property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
+              LINE
+            </property>
+            <property type="long" id="lineWidth" mode="w" >
+              1
+            </property>
+            <property type="boolean" id="stacked" mode="w" >
+              False
+            </property>
+            <property type="string" id="format" mode="w" >
+              %5.2lf%s
+            </property>
+            <property type="string" id="legend" mode="w" >
+              ${graphPoint/id}
+            </property>
+            <property type="long" id="limit" mode="w" >
+              -1
+            </property>
+            <property type="string" id="dpName" mode="w" >
+              overview_rate_publish
+            </property>
+            <property type="string" id="cFunc" mode="w" >
+              AVERAGE
+            </property>
+          </object>
+
+          <object id='Deliver' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+            <property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
+              LINE
+            </property>
+            <property type="long" id="lineWidth" mode="w" >
+              1
+            </property>
+            <property type="boolean" id="stacked" mode="w" >
+              False
+            </property>
+            <property type="string" id="format" mode="w" >
+              %5.2lf%s
+            </property>
+            <property type="string" id="legend" mode="w" >
+              ${graphPoint/id}
+            </property>
+            <property type="long" id="limit" mode="w" >
+              -1
+            </property>
+            <property type="string" id="dpName" mode="w" >
+              overview_rate_deliver
+            </property>
+            <property type="string" id="cFunc" mode="w" >
+              AVERAGE
+            </property>
+          </object>
+
+          <object id='Acknowledge' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+            <property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
+              LINE
+            </property>
+            <property type="long" id="lineWidth" mode="w" >
+              1
+            </property>
+            <property type="boolean" id="stacked" mode="w" >
+              False
+            </property>
+            <property type="string" id="format" mode="w" >
+              %5.2lf%s
+            </property>
+            <property type="string" id="legend" mode="w" >
+              ${graphPoint/id}
+            </property>
+            <property type="long" id="limit" mode="w" >
+              -1
+            </property>
+            <property type="string" id="dpName" mode="w" >
+              overview_rate_ack
+            </property>
+            <property type="string" id="cFunc" mode="w" >
+              AVERAGE
+            </property>
+          </object>
+
+        </tomanycont>
+        </object>
+
+
+
+    </tomanycont>
+  </object>
+
+</objects>
